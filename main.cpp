@@ -11,6 +11,10 @@ class Disaster
     int affectedPeople;
 
 public:
+    string getId()
+    {
+        return id;
+    }
     Disaster(string id, string type, string location,
              int severity, int affectedPeople)
     {
@@ -52,8 +56,29 @@ int main()
             int severity;
             int affectedPeople;
 
-            cout << "Enter Disaster ID: ";
-            cin >> id;
+            bool exists;
+
+            do
+            {
+                exists = false;
+
+                cout << "Enter Disaster ID: ";
+                cin >> id;
+
+                for (int i = 0; i < disasters.size(); i++)
+                {
+                    if (disasters[i].getId() == id)
+                    {
+                        cout << "Disaster ID already exists.\n";
+                        cout << "Please enter a different ID.\n";
+
+                        exists = true;
+                        break;
+                    }
+                }
+
+            } while (exists);
+
             cin.ignore();
             cout << "Enter Type (e.g. Flood): ";
             getline(cin, type);
@@ -61,9 +86,23 @@ int main()
             getline(cin, location);
             cout << "Enter Severity (1-10): ";
             cin >> severity;
-            while (severity < 1 || severity > 10)
+            while (cin.fail() || severity < 1 || severity > 10)
             {
-                cout << "Invalid severity. Please enter a value between 1 and 10: ";
+                if (cin.fail())
+                {
+                    // 1. Reset the error flag
+                    cin.clear();
+                    // 2. Clear the invalid text (like "abc") out of the buffer
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid input. Enter only numbers: ";
+                }
+                else
+                {
+                    // The input was a number, but out of the 1-10 range
+                    cout << "Invalid severity. Please enter a value between 1 and 10: ";
+                }
+
+                // Try reading the input again
                 cin >> severity;
             }
             cout << "Enter Affected People: ";
