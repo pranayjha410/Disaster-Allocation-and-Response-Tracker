@@ -56,27 +56,39 @@ int main()
             cin >> id;
             cin.ignore();
             cout << "Enter Type (e.g. Flood): ";
-            getline(cin,type);
+            getline(cin, type);
             cout << "Enter Location: ";
-            getline(cin,location);
+            getline(cin, location);
             cout << "Enter Severity (1-10): ";
             cin >> severity;
+            while (severity < 1 || severity > 10)
+            {
+                cout << "Invalid severity. Please enter a value between 1 and 10: ";
+                cin >> severity;
+            }
             cout << "Enter Affected People: ";
             cin >> affectedPeople;
+            while (affectedPeople <= 0)
+            {
+                cout << "Invalid number. Please enter a positive value: ";
+                cin >> affectedPeople;
+            }
 
             disasters.push_back(Disaster(id, type, location, severity, affectedPeople));
-    cout << "Disaster added successfully!"<<endl;
+            cout << "Disaster added successfully!" << endl;
         }
         else if (choice == 2)
         {
-            if(disasters.empty()){
-                cout<<"No Disasters Recorded Yet"<<endl;
+            if (disasters.empty())
+            {
+                cout << "No Disasters Recorded Yet" << endl;
             }
-            
-            for (int i = 0; i < disasters.size(); i++) {
-                 cout << "\nDisaster " << i + 1 << ":\n";
-        disasters[i].display();
-    }
+
+            for (int i = 0; i < disasters.size(); i++)
+            {
+                cout << "\nDisaster " << i + 1 << ":\n";
+                disasters[i].display();
+            }
         }
 
     } while (choice != 3);
