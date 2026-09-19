@@ -34,9 +34,70 @@ public:
         cout << "Affected People: " << affectedPeople << endl;
     }
 };
+
+enum class Priority
+{
+    LOW,
+    MEDIUM,
+    HIGH,
+    CRITICAL
+};
+
+class EmergencyRequest
+{
+    string requestId;
+    string personName;
+    string disasterId;
+    string need;
+    int peopleAffected;
+    Priority priority;
+
+public:
+    EmergencyRequest(string requestId, string personName, string disasterId,
+                     string need, int peopleAffected, Priority priority)
+    {
+        this->requestId = requestId;
+        this->personName = personName;
+        this->disasterId = disasterId;
+        this->need = need;
+        this->peopleAffected = peopleAffected;
+        this->priority = priority;
+    }
+
+    string getId()
+    {
+        return requestId;
+    }
+    string getPriorityText()
+    {
+        switch (priority)
+        {
+        case Priority::LOW:
+            return "Low";
+        case Priority::MEDIUM:
+            return "Medium";
+        case Priority::HIGH:
+            return "High";
+        case Priority::CRITICAL:
+            return "Critical";
+        }
+        return "Unknown";
+    }
+
+    void display()
+    {
+        cout << "Request ID: " << requestId << endl;
+        cout << "Requested By: " << personName << endl;
+        cout << "Disaster ID: " << disasterId << endl;
+        cout << "Need: " << need << endl;
+        cout << "People Affected: " << peopleAffected << endl;
+        cout << "Priority: " << getPriorityText() << endl;
+    }
+};
 int main()
 {
     vector<Disaster> disasters;
+    vector<EmergencyRequest> requests;
     int choice;
 
     do
@@ -44,7 +105,9 @@ int main()
         cout << "\n--- MENU ---\n";
         cout << "1. Add Disaster\n";
         cout << "2. View Disasters\n";
-        cout << "3. Exit\n";
+        cout << "3. Add Emergency Request\n";
+        cout << "4. View Emergency Requests\n";
+        cout << "5. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -129,8 +192,118 @@ int main()
                 disasters[i].display();
             }
         }
+        else if (choice == 3)
+        {
+            string requestId;
+            string personName;
+            string disasterId;
+            string need;
+            int peopleAffected;
+            Priority priority;
 
-    } while (choice != 3);
+            cin.ignore();
+            cout << "Enter Request ID: ";
+            getline(cin, requestId);
+            cout << "Enter Your Name: ";
+            getline(cin, personName);
+
+            bool disasterExists;
+            do
+            {
+                cout << "Enter Disaster ID this request is for: ";
+                getline(cin, disasterId);
+                disasterExists = false;
+
+                for (int i = 0; i < disasters.size(); i++)
+                {
+                    if (disasters[i].getId() == disasterId)
+                    {
+
+                        disasterExists = true;
+                        break;
+                    }
+                }
+                if (!disasterExists)
+                {
+                    cout << "Disaster ID does not exist.\n";
+                    cout << "Please enter a valid ID.\n";
+                }
+            } while (!disasterExists);
+
+            cout << "Enter Need (e.g. Food, Medicine, Shelter): ";
+            getline(cin, need);
+
+            cout << "Enter People Affected: ";
+            cin >> peopleAffected;
+
+            while (cin.fail() || peopleAffected <= 0)
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid input. Please enter a number: ";
+                }
+                else
+                {
+                    cout << "Please enter a positive number: ";
+                }
+
+                cin >> peopleAffected;
+            }
+
+            int priorityChoice;
+
+            cout << "\nSelect Priority:\n";
+            cout << "1. Low\n";
+            cout << "2. Medium\n";
+            cout << "3. High\n";
+            cout << "4. Critical\n";
+            cout << "Enter priority: ";
+
+            cin >> priorityChoice;
+            while (priorityChoice < 1 || priorityChoice > 4)
+            {
+                cout << "Invalid priority. Please enter a value between 1 and 4: ";
+                cin >> priorityChoice;
+            }
+            switch (priorityChoice)
+            {
+            case 1:
+                priority = Priority::LOW;
+                break;
+
+            case 2:
+                priority = Priority::MEDIUM;
+                break;
+
+            case 3:
+                priority = Priority::HIGH;
+                break;
+
+            case 4:
+                priority = Priority::CRITICAL;
+                break;
+            }
+
+            requests.push_back(EmergencyRequest(requestId, personName, disasterId, need, peopleAffected, priority));
+            cout << "Emergency Request added successfully!" << endl;
+        }
+        else if (choice == 4)
+        {
+            if (requests.empty())
+            {
+                cout << "No Emergency Requests Recorded Yet" << endl;
+            }
+
+            for (int i = 0; i < requests.size(); i++)
+            {
+                cout << "\nRequest " << i + 1 << ":\n";
+                requests[i].display();
+            }
+        }
+
+    } while (choice != 5);
     cout << "Program ended.\n";
 
     return 0;
