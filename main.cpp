@@ -1,99 +1,10 @@
 #include <iostream>
 #include <bits/stdc++.h>
+#include "Disaster.h"
+#include "EmergencyRequest.h"
 using namespace std;
 
-class Disaster
-{
-    string id;
-    string type;
-    string location;
-    int severity;
-    int affectedPeople;
 
-public:
-    string getId()
-    {
-        return id;
-    }
-    Disaster(string id, string type, string location,
-             int severity, int affectedPeople)
-    {
-        this->id = id;
-        this->type = type;
-        this->location = location;
-        this->severity = severity;
-        this->affectedPeople = affectedPeople;
-    }
-
-    void display()
-    {
-        cout << "Disaster ID: " << id << endl;
-        cout << "Type: " << type << endl;
-        cout << "Location: " << location << endl;
-        cout << "Severity: " << severity << endl;
-        cout << "Affected People: " << affectedPeople << endl;
-    }
-};
-
-enum class Priority
-{
-    LOW,
-    MEDIUM,
-    HIGH,
-    CRITICAL
-};
-
-class EmergencyRequest
-{
-    string requestId;
-    string personName;
-    string disasterId;
-    string need;
-    int peopleAffected;
-    Priority priority;
-
-public:
-    EmergencyRequest(string requestId, string personName, string disasterId,
-                     string need, int peopleAffected, Priority priority)
-    {
-        this->requestId = requestId;
-        this->personName = personName;
-        this->disasterId = disasterId;
-        this->need = need;
-        this->peopleAffected = peopleAffected;
-        this->priority = priority;
-    }
-
-    string getId()
-    {
-        return requestId;
-    }
-    string getPriorityText()
-    {
-        switch (priority)
-        {
-        case Priority::LOW:
-            return "Low";
-        case Priority::MEDIUM:
-            return "Medium";
-        case Priority::HIGH:
-            return "High";
-        case Priority::CRITICAL:
-            return "Critical";
-        }
-        return "Unknown";
-    }
-
-    void display()
-    {
-        cout << "Request ID: " << requestId << endl;
-        cout << "Requested By: " << personName << endl;
-        cout << "Disaster ID: " << disasterId << endl;
-        cout << "Need: " << need << endl;
-        cout << "People Affected: " << peopleAffected << endl;
-        cout << "Priority: " << getPriorityText() << endl;
-    }
-};
 int main()
 {
     vector<Disaster> disasters;
