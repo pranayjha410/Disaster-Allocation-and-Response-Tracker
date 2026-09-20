@@ -1,15 +1,38 @@
 #include <iostream>
-#include <bits/stdc++.h>
 #include "Disaster.h"
 #include "EmergencyRequest.h"
+#include <algorithm>
+#include <queue>
+#include <limits>
 using namespace std;
 
+// g++ main.cpp src/Disaster.cpp src/EmergencyRequest.cpp -Iinclude -o disaster
+//.\disaster
+bool compareByPriority(const EmergencyRequest &a,
+                       const EmergencyRequest &b)
+{
+    return static_cast<int>(a.getPriority()) >
+           static_cast<int>(b.getPriority());
+}
 
+struct EmergencyRequestCompare
+{
+    bool operator()(const EmergencyRequest &a,
+                    const EmergencyRequest &b) const
+    {
+        return static_cast<int>(a.getPriority()) < static_cast<int>(b.getPriority());
+    }
+};
 int main()
 {
     vector<Disaster> disasters;
     vector<EmergencyRequest> requests;
     int choice;
+
+    priority_queue<EmergencyRequest,
+                   vector<EmergencyRequest>,
+                   EmergencyRequestCompare>
+        emergencyQueue;
 
     do
     {
@@ -18,7 +41,8 @@ int main()
         cout << "2. View Disasters\n";
         cout << "3. Add Emergency Request\n";
         cout << "4. View Emergency Requests\n";
-        cout << "5. Exit\n";
+        cout << "5. Process Next Emergency\n";
+        cout << "6. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -113,8 +137,29 @@ int main()
             Priority priority;
 
             cin.ignore();
-            cout << "Enter Request ID: ";
-            getline(cin, requestId);
+             bool exists;
+
+            do
+            {
+                exists = false;
+
+                cout << "Enter Request ID: ";
+                cin >> requestId;
+
+                for (int i = 0; i < requests.size(); i++)
+                {
+                    if (requests[i].getId() == requestId)
+                    {
+                        cout << "Request ID already exists.\n";
+                        cout << "Please enter a different ID.\n";
+
+                        exists = true;
+                        break;
+                    }
+                }
+
+            } while (exists);
+            cin.ignore();
             cout << "Enter Your Name: ";
             getline(cin, personName);
 
@@ -198,6 +243,7 @@ int main()
             }
 
             requests.push_back(EmergencyRequest(requestId, personName, disasterId, need, peopleAffected, priority));
+            emergencyQueue.push(EmergencyRequest(requestId, personName, disasterId, need, peopleAffected, priority));
             cout << "Emergency Request added successfully!" << endl;
         }
         else if (choice == 4)
@@ -206,15 +252,42 @@ int main()
             {
                 cout << "No Emergency Requests Recorded Yet" << endl;
             }
-
+            sort(requests.begin(), requests.end(), compareByPriority);
             for (int i = 0; i < requests.size(); i++)
             {
                 cout << "\nRequest " << i + 1 << ":\n";
                 requests[i].display();
             }
         }
+        else if (choice == 5)
+        {
+            if (emergencyQueue.empty())
+            {
+                cout << "No pending emergencies to process.\n";
+            }
+            else
+            {
+                EmergencyRequest top = emergencyQueue.top();
+                emergencyQueue.pop();
 
-    } while (choice != 5);
+                cout << "\nProcessing highest priority emergency:\n";
+                top.display();
+
+                for (int i = 0; i < requests.size(); i++)
+                {
+                    if (requests[i].getId() == top.getId())
+                    {
+                        requests[i].markProcessed();
+                        break;
+                    }
+                }
+
+                cout << "Emergency request processed successfully!" << endl;
+            }
+        }
+
+    } while (choice != 6);
+
     cout << "Program ended.\n";
 
     return 0;

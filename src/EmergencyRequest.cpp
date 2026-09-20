@@ -16,6 +16,7 @@ EmergencyRequest::EmergencyRequest(const string& requestId,
     this->need = need;
     this->peopleAffected = peopleAffected;
     this->priority = priority;
+    this->status = RequestStatus::PENDING;
 }
 
 string EmergencyRequest::getId() const
@@ -27,6 +28,7 @@ Priority EmergencyRequest::getPriority() const
 {
     return priority;
 }
+
 
 string EmergencyRequest::getPriorityText() const
 {
@@ -47,6 +49,26 @@ string EmergencyRequest::getPriorityText() const
 
     return "Unknown";
 }
+RequestStatus EmergencyRequest::getStatus() const{
+    return status;
+}   
+
+string EmergencyRequest::getStatusText() const{
+      switch (status)
+    {
+        case RequestStatus::PENDING:
+            return "Pending";
+
+        case RequestStatus::PROCESSED:
+            return "Processed";
+    }
+
+    return "Unknown";
+}
+void EmergencyRequest::markProcessed()
+{
+    status = RequestStatus::PROCESSED;
+}
 
 void EmergencyRequest::display() const
 {
@@ -56,4 +78,5 @@ void EmergencyRequest::display() const
     cout << "Need: " << need << endl;
     cout << "People Affected: " << peopleAffected << endl;
     cout << "Priority: " << getPriorityText() << endl;
+    cout << "Status: " << getStatusText() << endl;
 }

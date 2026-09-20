@@ -10,6 +10,11 @@ enum class Priority
     HIGH,
     CRITICAL
 };
+enum class RequestStatus
+{
+    PENDING,
+    PROCESSED
+};
 
 class EmergencyRequest
 {
@@ -20,12 +25,13 @@ private:
     std::string need;
     int peopleAffected;
     Priority priority;
+    RequestStatus status;
 
 public:
-    EmergencyRequest(const std::string& requestId,
-                     const std::string& personName,
-                     const std::string& disasterId,
-                     const std::string& need,
+    EmergencyRequest(const std::string &requestId,
+                     const std::string &personName,
+                     const std::string &disasterId,
+                     const std::string &need,
                      int peopleAffected,
                      Priority priority);
 
@@ -34,6 +40,12 @@ public:
     Priority getPriority() const;
 
     std::string getPriorityText() const;
+
+    RequestStatus getStatus() const;
+
+    std::string getStatusText() const;
+
+    void markProcessed();
 
     void display() const;
 };
