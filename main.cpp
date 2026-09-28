@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <queue>
 #include <limits>
+#include "FoodResource.h"
+#include "MedicalResource.h"
 using namespace std;
 
 // g++ main.cpp src/Disaster.cpp src/EmergencyRequest.cpp -Iinclude -o disaster
@@ -23,8 +25,22 @@ struct EmergencyRequestCompare
         return static_cast<int>(a.getPriority()) < static_cast<int>(b.getPriority());
     }
 };
+
+
+
 int main()
 {
+FoodResource food("F001", "Rice Packets", 500, 30);
+
+MedicalResource medicine("M001", "Paracetamol", 200, false);
+
+cout << "\n--- Food Resource ---\n";
+food.display();
+
+cout << "\n--- Medical Resource ---\n";
+medicine.display();
+
+
     vector<Disaster> disasters;
     vector<EmergencyRequest> requests;
     int choice;
