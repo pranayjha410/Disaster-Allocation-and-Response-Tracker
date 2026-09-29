@@ -18,5 +18,5 @@ void FoodResource::display() const
     cout << "Resource Type: Food" << endl;
     cout << "Name: " <<     getName() << endl;
     cout << "Quantity: " << getQuantity()  << endl;
-    cout << "Expiry Days: " << expiryDays << endl;
+     cout << "Expires In (days): " << expiryDays << endl;
 }

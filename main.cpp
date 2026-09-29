@@ -1,11 +1,15 @@
 #include <iostream>
-#include "Disaster.h"
-#include "EmergencyRequest.h"
+#include <vector>
 #include <algorithm>
 #include <queue>
 #include <limits>
+#include <memory>
+#include "Disaster.h"
+#include "EmergencyRequest.h"
 #include "FoodResource.h"
 #include "MedicalResource.h"
+#include "ShelterResource.h"
+
 using namespace std;
 
 // g++ main.cpp src/Disaster.cpp src/EmergencyRequest.cpp -Iinclude -o disaster
@@ -30,17 +34,54 @@ struct EmergencyRequestCompare
 
 int main()
 {
-FoodResource food("F001", "Rice Packets", 500, 30);
+// FoodResource food("F001", "Rice Packets", 500, 30);
 
-MedicalResource medicine("M001", "Paracetamol", 200, false);
+// MedicalResource medicine("M001", "Paracetamol", 200, false);
 
-cout << "\n--- Food Resource ---\n";
-food.display();
+// ShelterResource shelter("S001", "Temporary Shelter", 5, 100);
+// // cout << "\n--- Food Resource ---\n";
+// // food.display();
 
-cout << "\n--- Medical Resource ---\n";
-medicine.display();
+// // cout << "\n--- Medical Resource ---\n";
+// // medicine.display();
 
+// // Resource* resource1 = &food;
+// // Resource* resource2 = &medicine;
 
+// // cout << "\n--- Polymorphism Test ---\n";
+
+// // resource1->display();
+// // resource2->display();
+
+// vector<Resource*> inventory;
+
+// inventory.push_back(&food);
+// inventory.push_back(&medicine);
+// inventory.push_back(&shelter);
+// cout << "\n--- All Resources ---\n";
+
+// for (Resource* resource : inventory)
+// {
+//     resource->display();
+//     cout << "-------------------\n";
+// }
+
+vector<unique_ptr<Resource>> inventory;
+inventory.push_back(
+    make_unique<FoodResource>("F001", "Rice Packets", 500, 30)
+);
+inventory.push_back(
+    make_unique<MedicalResource>("M001", "Paracetamol", 200, false)
+);
+
+inventory.push_back(
+    make_unique<ShelterResource>("S001", "Temporary Shelter", 5, 100)
+);
+for (const auto& resource : inventory)
+{
+    resource->display();
+    cout << "-------------------\n";
+}
     vector<Disaster> disasters;
     vector<EmergencyRequest> requests;
     int choice;
