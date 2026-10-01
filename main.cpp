@@ -6,6 +6,7 @@
 #include <memory>
 #include "Disaster.h"
 #include "EmergencyRequest.h"
+#include "Resource.h"
 #include "FoodResource.h"
 #include "MedicalResource.h"
 #include "ShelterResource.h"
@@ -30,58 +31,53 @@ struct EmergencyRequestCompare
     }
 };
 
-
-
 int main()
 {
-// FoodResource food("F001", "Rice Packets", 500, 30);
+    // FoodResource food("F001", "Rice Packets", 500, 30);
 
-// MedicalResource medicine("M001", "Paracetamol", 200, false);
+    // MedicalResource medicine("M001", "Paracetamol", 200, false);
 
-// ShelterResource shelter("S001", "Temporary Shelter", 5, 100);
-// // cout << "\n--- Food Resource ---\n";
-// // food.display();
+    // ShelterResource shelter("S001", "Temporary Shelter", 5, 100);
+    // // cout << "\n--- Food Resource ---\n";
+    // // food.display();
 
-// // cout << "\n--- Medical Resource ---\n";
-// // medicine.display();
+    // // cout << "\n--- Medical Resource ---\n";
+    // // medicine.display();
 
-// // Resource* resource1 = &food;
-// // Resource* resource2 = &medicine;
+    // // Resource* resource1 = &food;
+    // // Resource* resource2 = &medicine;
 
-// // cout << "\n--- Polymorphism Test ---\n";
+    // // cout << "\n--- Polymorphism Test ---\n";
 
-// // resource1->display();
-// // resource2->display();
+    // // resource1->display();
+    // // resource2->display();
 
-// vector<Resource*> inventory;
+    // vector<Resource*> inventory;
 
-// inventory.push_back(&food);
-// inventory.push_back(&medicine);
-// inventory.push_back(&shelter);
-// cout << "\n--- All Resources ---\n";
+    // inventory.push_back(&food);
+    // inventory.push_back(&medicine);
+    // inventory.push_back(&shelter);
+    // cout << "\n--- All Resources ---\n";
 
-// for (Resource* resource : inventory)
-// {
-//     resource->display();
-//     cout << "-------------------\n";
-// }
+    // for (Resource* resource : inventory)
+    // {
+    //     resource->display();
+    //     cout << "-------------------\n";
+    // }
 
-vector<unique_ptr<Resource>> inventory;
-inventory.push_back(
-    make_unique<FoodResource>("F001", "Rice Packets", 500, 30)
-);
-inventory.push_back(
-    make_unique<MedicalResource>("M001", "Paracetamol", 200, false)
-);
+    vector<unique_ptr<Resource>> inventory;
+    // inventory.push_back(
+    //     make_unique<FoodResource>("F001", "Rice Packets", 500, 30));
+    // inventory.push_back(
+    //     make_unique<MedicalResource>("M001", "Paracetamol", 200, false));
 
-inventory.push_back(
-    make_unique<ShelterResource>("S001", "Temporary Shelter", 5, 100)
-);
-for (const auto& resource : inventory)
-{
-    resource->display();
-    cout << "-------------------\n";
-}
+    // inventory.push_back(
+    //     make_unique<ShelterResource>("S001", "Temporary Shelter", 5, 100));
+    // for (const auto &resource : inventory)
+    // {
+    //     resource->display();
+    //     cout << "-------------------\n";
+    // }
     vector<Disaster> disasters;
     vector<EmergencyRequest> requests;
     int choice;
@@ -99,7 +95,10 @@ for (const auto& resource : inventory)
         cout << "3. Add Emergency Request\n";
         cout << "4. View Emergency Requests\n";
         cout << "5. Process Next Emergency\n";
-        cout << "6. Exit\n";
+        cout << "6. Add Resource" << endl;
+        cout << "7. View Resources" << endl;
+        cout << "8. Allocate Resource" << endl;
+        cout << "9. Exit" << endl;
         cout << "Enter choice: ";
         cin >> choice;
 
@@ -194,7 +193,7 @@ for (const auto& resource : inventory)
             Priority priority;
 
             cin.ignore();
-             bool exists;
+            bool exists;
 
             do
             {
@@ -342,8 +341,176 @@ for (const auto& resource : inventory)
                 cout << "Emergency request processed successfully!" << endl;
             }
         }
+        else if (choice == 6)
+        {
+            string resourceId, name;
+            int quantity;
+            bool exists;
 
-    } while (choice != 6);
+            do
+            {
+                exists = false;
+
+                cout << "Enter Resource ID: ";
+                cin >> resourceId;
+
+                for (int i = 0; i < inventory.size(); i++)
+                {
+                    if (inventory[i]->getId() == resourceId)
+                    {
+                        cout << "Resource ID already exists.\n";
+                        cout << "Please enter a different ID.\n";
+                        exists = true;
+                        break;
+                    }
+                }
+
+            } while (exists);
+
+            cin.ignore();
+
+            cout << "Enter Name: ";
+            getline(cin, name);
+
+            cout << "Enter Quantity: ";
+            cin >> quantity;
+
+            while (cin.fail() || quantity < 1)
+            {
+                if (cin.fail())
+                {
+                    // 1. Reset the error flag
+                    cin.clear();
+                    // 2. Clear the invalid text (like "abc") out of the buffer
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid input. Enter only numbers: ";
+                }
+
+                // Try reading the input again
+                cin >> quantity;
+            }
+
+            int resourceType;
+
+            cout << "\nSelect Resource Type:\n";
+            cout << "1. Food\n";
+            cout << "2. Medical\n";
+            cout << "3. Shelter\n";
+            cout << "Enter choice: ";
+            cin >> resourceType;
+
+            while (cin.fail() || resourceType < 1 || resourceType > 3)
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+
+                cout << "Invalid choice. Enter 1, 2, or 3: ";
+                cin >> resourceType;
+            }
+
+            if (resourceType == 1)
+            {
+                int expiryDays;
+
+                cout << "Enter Expiry Days: ";
+                cin >> expiryDays;
+
+                while (cin.fail() || expiryDays < 1)
+                {
+                    if (cin.fail())
+                    {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+
+                    cout << "Invalid input. Enter positive expiry days: ";
+                    cin >> expiryDays;
+                }
+
+                inventory.push_back(
+                    make_unique<FoodResource>(
+                        resourceId,
+                        name,
+                        quantity,
+                        expiryDays));
+            }
+            else if (resourceType == 2)
+            {
+                int prescriptionChoice;
+
+                cout << "Requires Prescription?\n";
+                cout << "1. Yes\n";
+                cout << "2. No\n";
+                cout << "Enter choice: ";
+                cin >> prescriptionChoice;
+
+                while (cin.fail() || prescriptionChoice < 1 || prescriptionChoice > 2)
+                {
+                    if (cin.fail())
+                    {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+
+                    cout << "Invalid choice. Enter 1 or 2: ";
+                    cin >> prescriptionChoice;
+                }
+
+                bool requiresPrescription = (prescriptionChoice == 1);
+
+                inventory.push_back(
+                    make_unique<MedicalResource>(
+                        resourceId,
+                        name,
+                        quantity,
+                        requiresPrescription));
+            }
+            else if (resourceType == 3)
+            {
+                int capacity;
+                cout << "Enter Capacity Per Unit: ";
+                cin >> capacity;
+                while (cin.fail() || capacity < 1)
+                {
+                    if (cin.fail())
+                    {
+                        cin.clear();
+                        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    }
+
+                    cout << "Invalid input. Enter positive Capacity: ";
+                    cin >> capacity;
+                }
+                inventory.push_back(
+                    make_unique<ShelterResource>(
+                        resourceId,
+                        name,
+                        quantity,
+                        capacity));
+            }
+        }
+        else if (choice == 7)
+        {
+            if (inventory.empty())
+            {
+                cout << "No resources available.\n";
+            }
+            else
+            {
+                cout << "\n--- Resource Inventory ---\n";
+
+                for (const auto &resource : inventory)
+                {
+                    resource->display();
+                    cout << "-------------------\n";
+                }
+            }
+        }
+
+    } while (choice != 9);
 
     cout << "Program ended.\n";
 
