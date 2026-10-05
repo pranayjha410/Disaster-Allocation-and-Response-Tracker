@@ -24,6 +24,10 @@ int Resource::getQuantity() const
 {
     return quantity;
 }
+void Resource::reduceQuantity(int amount)
+{
+    quantity -= amount;
+}
 
 
 

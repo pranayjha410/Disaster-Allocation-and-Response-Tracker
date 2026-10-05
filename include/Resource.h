@@ -22,6 +22,9 @@ public:
     std::string getId() const;
     std::string getName() const;
     int getQuantity() const; // inbuilt type
+
+
+    void reduceQuantity(int amount); 
 };
 
 #endif

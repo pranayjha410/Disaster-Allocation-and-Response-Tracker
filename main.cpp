@@ -509,7 +509,70 @@ int main()
                 }
             }
         }
+        else if (choice == 8)
+        {
+            string resourceId;
+            bool found = false;
 
+            while (!found)
+            {
+                cout << "Enter Resource ID: ";
+                cin >> resourceId;
+
+                for (const auto &resource : inventory)
+                {
+                    if (resource->getId() == resourceId)
+                    {
+                        found = true;
+
+                        int amount;
+
+                        while (true)
+                        {
+                            cout << "Enter quantity to allocate: ";
+                            cin >> amount;
+
+                            while (cin.fail() || amount <= 0)
+                            {
+                                if (cin.fail())
+                                {
+                                    cin.clear();
+                                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                                }
+
+                                cout << "Invalid amount. Enter a positive number: ";
+                                cin >> amount;
+                            }
+
+                            if (amount > resource->getQuantity())
+                            {
+                                cout << "Not enough stock. Available: "
+                                     << resource->getQuantity() << endl;
+
+                                continue;
+                            }
+
+                            resource->reduceQuantity(amount);
+
+                            cout << "Allocated " << amount
+                                 << " units successfully!\n";
+
+                            cout << "Remaining quantity: "
+                                 << resource->getQuantity() << endl;
+
+                            break;
+                        }
+
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    cout << "Resource not found. Please try again.\n";
+                }
+            }
+        }
     } while (choice != 9);
 
     cout << "Program ended.\n";
